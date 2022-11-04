@@ -1,5 +1,12 @@
 
 # About the project
+# Introduction to Open Data Science 2022. 
+The course contains essential lessons in R from beginner to intermediate level.
+I am really looking forward to this course, but the amount of work is a bit scary along with other courses and my job.
+I looking forward to learn smarter ways to use **R** and more about *statistical methods*.
+I learned about this course from an email from University of Helsinki with a listing of starting courses.
+
+[link](https://github.com/Joonasko/IODS-project.git)
 
 *Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you should use R Markdown syntax.*
 
