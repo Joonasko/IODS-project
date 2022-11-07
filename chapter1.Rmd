@@ -1,23 +1,5 @@
 
 # About the project
 # Introduction to Open Data Science 2022. 
-The course contains essential lessons in R from beginner to intermediate level.
-I am really looking forward to this course, but the amount of work is a bit scary along with other courses and my job.
-I am looking forward to learn smarter ways to use **R** and more about *statistical methods*.
-I learned about this course from an email from University of Helsinki with a listing of starting courses.
-
-[link](https://github.com/Joonasko/IODS-project.git)
-
-*Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you should use R Markdown syntax.*
-
-```{r}
-# This is a so-called "R chunk" where you can write R code.
-
-date()
-
-```
-
-The exercise set and the first chapters were a good introduction into the topic.
-It's good to have some "official" recommendations on how to write code, instead of just learning from github and stackoverflow.
-For some reason plotting has always been quite difficult for me, so it's really helpful to start learning ggplot.
+ning ggplot.
 I think the learning curve is quite steep, but worthwile in the long run.
