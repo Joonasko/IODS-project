@@ -16,5 +16,8 @@ I learned about this course from an email from University of Helsinki with a lis
 date()
 
 ```
-The text continues here.
 
+The exercise set and the first chapters were a good introduction into the topic.
+It's good to have some "official" recommendations on how to write code, instead of just learning from github and stackoverflow.
+For some reason plotting has always been quite difficult for me, so it's really helpful to start learning ggplot.
+I think the learning curve is quite steep, but worthwile in the long run.
