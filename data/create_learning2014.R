@@ -97,19 +97,23 @@ summary(my_model)
 # conclusion: while the attitude has the highest correlation with the points of all of the variables, there are some unfound variables that could explain the variation.
 
 # plotting the residuals vs fitted values, normal Q-Q-plot and Residual vs Leverage
-plot(my_model)
+# residuals vs fitted values:
+plot(my_model, which = 1)
 
 # residuals vs fitted values plot thoughts:
-# there seems to be 3 outlier values: 35, 56 and 145
+# there seems to be 3 outlier values: 35, 56 and 14s5
 # the relationship seems to be linear
 # residuals range mainly in between -10 to 10, but the model seems to overestimate the fitted values especially at values over 24
 
-# normal Q-Q-plot
+# normal Q-Q-plot:
+plot(my_model, which = 2)
+
 # again the points 35, 56 and 145 are outliers
 # the data points are mostly on the y=x line, meaning that the data is most likely normally distributed
 # however there is some deviation in the upper right corner of the data (as was seen in the data overview plot)
 
 # residuals vs leverage plot
+plot(my_model, which = 5)
 # this time the outlier points are 35, 56 and 71
 # all points are outside Cook's distance, meaning that none of the points are influential
 
