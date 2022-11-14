@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Joonas Kolstela" />
+<meta name="author" content="Joonas Kolstela test" />
 
 
 <title>IODS course project</title>
@@ -381,7 +381,7 @@ pre code {
 
 
 <h1 class="title toc-ignore">IODS course project</h1>
-<h4 class="author">Joonas Kolstela</h4>
+<h4 class="author">Joonas Kolstela test</h4>
 
 </div>
 
@@ -389,8 +389,12 @@ pre code {
 <ul>
 <li><a href="#introduction-to-open-data-science---course-project" id="toc-introduction-to-open-data-science---course-project">Introduction
 to Open Data Science - Course Project</a></li>
-<li><a href="#insert-chapter-2-title-here" id="toc-insert-chapter-2-title-here">Insert chapter 2 title
-here</a></li>
+<li><a href="#chapter-2---first-data-wrangling-and-analysis-of-the-learning2014-dataset" id="toc-chapter-2---first-data-wrangling-and-analysis-of-the-learning2014-dataset">Chapter
+2 - first data wrangling and analysis of the learning2014 dataset</a>
+<ul>
+<li><a href="#work-description-and-results" id="toc-work-description-and-results">Work description and
+results</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -411,7 +415,7 @@ use R Markdown syntax.</em></p>
 <pre class="r"><code># This is a so-called &quot;R chunk&quot; where you can write R code.
 
 date()</code></pre>
-<pre><code>## [1] &quot;Mon Nov 14 13:35:08 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Mon Nov 14 18:59:15 2022&quot;</code></pre>
 <p>The exercise set and the first chapters were a good introduction into
 the topic. It’s good to have some “official” recommendations on how to
 write code, instead of just learning from github and stackoverflow. For
@@ -420,23 +424,50 @@ really helpful to start learning ggplot. I think the learning curve is
 quite steep, but worthwile in the long run.</p>
 <hr />
 </div>
-<div id="insert-chapter-2-title-here" class="section level1">
-<h1>Insert chapter 2 title here</h1>
-<p><em>Describe the work you have done this week and summarize your
-learning.</em></p>
-<ul>
-<li>Describe your work and results clearly.</li>
-<li>Assume the reader has an introductory course level understanding of
-writing and reading R code as well as statistical methods.</li>
-<li>Assume the reader has no previous knowledge of your data or the more
-advanced methods you are using.</li>
-</ul>
+<div id="chapter-2---first-data-wrangling-and-analysis-of-the-learning2014-dataset" class="section level1">
+<h1>Chapter 2 - first data wrangling and analysis of the learning2014
+dataset</h1>
+<div id="work-description-and-results" class="section level2">
+<h2>Work description and results</h2>
+<p>In this exercise I downloaded the dataset containing the
+international survey results of Approaches to Learning from the course
+Introduction to Social Statistics, found here: <a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt</a><br />
+The dataset contains information about the students such as age and
+gender, and information about their attutudes towards the course
+assigments and how well they performed.</p>
+<p>I performed some necessary data wrangling, in which we combined some
+of the questionnaire data into larger sets depicting deep, strategic and
+surface level question types. We also removed all students who scored 0
+points from their assigments from the dataset.</p>
+<p>After plotting the data and doing an overview of it and it’s
+correlations with a matrix plot, I noticed that from the different
+variables, attitude and performance in strategic questions had higher
+correlation with the points (attitude 0.437 and strategic questions
+0.146) than other variables. After testing a linear regression model
+with age, strategic questions and attitude as explaining variables to
+the points, it was clear that only the students attitude had
+significance in the model.</p>
+<p>After removing the age and strategic questions from the linear model,
+the resulting explanatory variable had a p-value of 4.12e-09, meaning
+that it is significant. The residual values lean a bit on the negative
+side, meaning that the model underestimates certain points. The t-value
+of 6.214 indicates that we can say that a relationship between attitude
+and points scored exists.</p>
+<p>however, the multiple R-squared has a quite low value of 0.1906,
+meaning that our predictor (attitude) explains only 19 % of the variance
+in our responce variable (points). Finally, the F-statistic of 38.61 is
+high enough to confirm that there is a relationship between attitude and
+points. <strong>My conclusion is, that while the attitude has the
+highest correlation with the points of all of the variables, there are
+still some unfound variables that could be used together with attitude
+to explain the variation.</strong></p>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Mon Nov 14 13:35:08 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Mon Nov 14 18:59:15 2022&quot;</code></pre>
 <p>Here we go again…</p>
 <hr />
 <p>(more chapters to be added similarly as we proceed with the
 course!)</p>
+</div>
 </div>
 
 
