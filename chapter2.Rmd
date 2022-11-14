@@ -2,17 +2,17 @@
 
 ## Work description and results
 In this exercise I downloaded the dataset containing the international survey results of Approaches to Learning from the course Introduction to Social Statistics, found here: http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt  
-The dataset contains information about the students such as age and gender, and information about their attutudes towards the course assigments and how well they performed. 
+The dataset contains information about the students such as age and gender, and information about their attitudes towards the course assignments and how well they performed. 
 
-I performed some necessary data wrangling, in which we combined some of the questionnaire data into larger sets depicting deep, strategic and surface level question types. We also removed all students who scored 0 points from their assigments from the dataset. 
+I performed some necessary data wrangling, in which we combined some of the questionnaire data into larger sets depicting deep, strategic and surface level question types. We also removed all students who scored 0 points from their assignments from the dataset. 
 
-After plotting the data and doing an overview of it and it's correlations with a matrix plot, I noticed that from the different variables, attitude and performance in strategic questions had higher correlation with the points (attitude 0.437 and strategic questions 0.146) than other variables. After testing a linear regression model with age, strategic questions and attitude as explaining variables to the points, it was clear that only the students attitude had significance in the model.
+After plotting the data and doing an overview of it and its correlations with a matrix plot, I noticed that from the different variables, attitude and performance in strategic questions had higher correlation with the points (attitude 0.437 and strategic questions 0.146) than other variables. After testing a linear regression model with age, strategic questions and attitude as explaining variables to the points, it was clear that only the student's attitude had significance in the model.
 
 After removing the age and strategic questions from the linear model, the resulting explanatory variable had a p-value of 4.12e-09, meaning that it is significant.
 The residual values lean a bit on the negative side, meaning that the model underestimates certain points.
 The t-value of 6.214 indicates that we can say that a relationship between attitude and points scored exists.
 
-however, the multiple R-squared has a quite low value of 0.1906, meaning that our predictor (attitude) explains only 19 % of the variance in our responce variable (points). Finally, the F-statistic of 38.61 is high enough to confirm that there is a relationship between attitude and points.
+however, the multiple R-squared has a quite low value of 0.1906, meaning that our predictor (attitude) explains only 19 % of the variance in our response variable (points). Finally, the F-statistic of 38.61 is high enough to confirm that there is a relationship between attitude and points.
 **My conclusion is, that while the attitude has the highest correlation with the points of all of the variables, there are still some unfound variables that could be used together with attitude to explain the variation.**
 
 ```{r}
