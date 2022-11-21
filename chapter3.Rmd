@@ -1,7 +1,10 @@
+# Chapter 3 - data wrangling and analysis of the Portuguese student performance dataset
+
+
 Joonas Kolstela, 17.11.2022 18:53, script for datawrangling and analysis of the UCI machine learning student performance data.
 Data source: https://archive.ics.uci.edu/ml/datasets/Student+Performance  
 
-# Data wrangling part
+## Data wrangling part
 ## Reading, combining and checking structure of the data  
 These datasets consists of data from two questionnaires from Portuguese schools.  
 The first dataset contains answers from the subject of mathematics and the other from Portuguese language.  
