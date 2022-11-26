@@ -1,0 +1,156 @@
+# Chapter 4 - Data analysis of the Boston dataset and data wrangling of chapter 5 data  
+
+### Exploring the dataset  
+
+```{r}
+# Loading packages.
+library(dplyr)
+library(MASS)
+library(tidyr)
+library(corrplot)
+library(ggplot2)
+library(GGally)
+# Loading the Boston dataset from MASS package.
+data(Boston)
+
+# Exploring the structure and dimensions of the dataset.
+str(Boston)
+dim(Boston)
+```
+
+The Boston dataset depicts housing values in suburbs of Boston.  
+Dataset includes variables such as crime rates, taxation rates, accessibility to radial highways and median values of owner-occupied homes.  
+The variables consist of numerical values, and it has 506 rows and 14 columns.  
+
+### Graphical overview of the data  
+
+```{r}
+# Plot variable info.
+pairs(Boston, pch = 20)
+
+summary(Boston)
+
+# Plot correlation between variables.
+p <- ggpairs(Boston, upper = list(continuous = wrap("cor",size=2)))
+p
+
+# Create the correlation matrix and plot it.
+cor_matrix <- round(cor(Boston),digits=5)
+cor_matrix
+corrplot(cor_matrix, method="circle")
+
+```
+
+There are a bit too many variables for these kinds of plots, but overall we can see that only the **rm (average rooms per dwelling)** seems to follow a normal distribution.  
+From the correlation matrix we can see heavy positive and negative correlation between many of the variables in the dataset. The only variable with very low correlation to the other variables is the **chas (Charles River dummy variable)**.  Looking at the **medv (median value of owner-occupied homes in $1000s)** and its correlation, we can see that almost all of the variables have quite high positive or negative correlation, with the highest being the **lstat (lower status of the population (percent))**.  
+
+### Standardizing the dataset and looking at the results
+
+```{r}
+summary(Boston)
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+```
+
+Standardizing the dataset causes all variable mean values to be 0 and max and min values are closer than in the pre-standardized dataset. For example the **crim** variable had a value range of 0.00632 to 88.97620 and after the standardization it is -0.419367 to 9.924110.  
+
+### Creating the training set  
+
+```{r}
+
+
+class(boston_scaled)
+
+boston_scaled <- as.data.frame(boston_scaled)
+boston_scaled$crim <- as.numeric(boston_scaled$crim)
+
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# Boston and boston_scaled are available
+
+# summary of the scaled crime rate
+summary(boston_scaled$crim)
+
+# create a quantile vector of crim and print it
+bins <- quantile(boston_scaled$crim)
+bins
+
+# create a categorical variable 'crime'
+crime <- cut(boston_scaled$crim, breaks = bins, 
+             label = c("low","med_low","med_high","high"), 
+             include.lowest = TRUE)
+
+# look at the table of the new factor crime
+table(crime)
+
+# remove original crim from the dataset
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+
+# add the new categorical value to scaled data
+boston_scaled <- data.frame(boston_scaled, crime)
+
+n <- nrow(boston_scaled)
+ind <- sample(n, size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+
+```
+  
+
+### Fitting the linear discriminant analysis on the train set and drawing the plot  
+
+```{r}
+
+lda.fit <- lda(crime~., data = train)
+
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+
+# target classes as numeric
+classes <- as.numeric(train$crime)
+
+# plot the lda results
+plot(lda.fit, col = classes, dimen = 2)
+lda.arrows(lda.fit, myscale = 1)
+
+print(lda.fit)
+```
+  
+### Predicting the classes with the LDA model
+
+```{r}
+lda.pred <- predict(lda.fit, newdata = test)
+
+table(correct = correct_classes, predicted = lda.pred$class)
+```
+
+Our model seems to work best when predicting high crime rates, but results quicly get worse as we move to the lower crimerates (especially the med_low rate).  
+
+### Euclidean distances, K-means and clustering   
+
+```{r}
+# Re-reading the data and standardizing it.
+data(Boston)
+Boston <- scale(Boston)
+Boston <- as.data.frame(Boston)
+
+# Calculating distances between observations with euclidean and manhattan methods.
+dist_eu <- dist(Boston, method = "euclidean")
+summary(dist_eu)
+dist_man <- dist(Boston, method = "manhattan")
+summary(dist_man)
+
+# K-means clustering
+km <- kmeans(Boston, centers = 4)
+pairs(Boston[1:6], col = km$cluster)
+
+
+
+```
