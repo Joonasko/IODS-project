@@ -47,6 +47,7 @@ From the correlation matrix we can see heavy positive and negative correlation b
 ### Standardizing the dataset and looking at the results
 
 ```{r}
+# Checking data summary and standardizing the dataset.
 summary(Boston)
 boston_scaled <- scale(Boston)
 summary(boston_scaled)
@@ -58,36 +59,33 @@ Standardizing the dataset causes all variable mean values to be 0 and max and mi
 
 ```{r}
 
-
+# Checking dataset class and changing it to a dataframe.
 class(boston_scaled)
-
 boston_scaled <- as.data.frame(boston_scaled)
 boston_scaled$crim <- as.numeric(boston_scaled$crim)
 
-# Work with the exercise in this chunk, step-by-step. Fix the R code!
-# Boston and boston_scaled are available
-
-# summary of the scaled crime rate
+# Summary of the scaled crime rate.
 summary(boston_scaled$crim)
 
-# create a quantile vector of crim and print it
+# Creating a quantile vector of crim variable.
 bins <- quantile(boston_scaled$crim)
 bins
 
-# create a categorical variable 'crime'
+# Creating a categorical variable crime.
 crime <- cut(boston_scaled$crim, breaks = bins, 
              label = c("low","med_low","med_high","high"), 
              include.lowest = TRUE)
 
-# look at the table of the new factor crime
+# Looking at the table of the new factor crime.
 table(crime)
 
-# remove original crim from the dataset
+# Removing the original crim from the dataset.
 boston_scaled <- dplyr::select(boston_scaled, -crim)
 
-# add the new categorical value to scaled data
+# Adding the new categorical value to scaled data.
 boston_scaled <- data.frame(boston_scaled, crime)
 
+# Creating the train and test datasets.
 n <- nrow(boston_scaled)
 ind <- sample(n, size = n * 0.8)
 train <- boston_scaled[ind,]
@@ -102,6 +100,7 @@ test <- dplyr::select(test, -crime)
 
 ```{r}
 
+# Creating the linear discriminant model.
 lda.fit <- lda(crime~., data = train)
 
 lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
@@ -113,10 +112,10 @@ lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0
        cex = tex, col=color, pos=3)
 }
 
-# target classes as numeric
+# Changing target classes to numeric.
 classes <- as.numeric(train$crime)
 
-# plot the lda results
+# Plotting the results.
 plot(lda.fit, col = classes, dimen = 2)
 lda.arrows(lda.fit, myscale = 1)
 
@@ -126,6 +125,7 @@ print(lda.fit)
 ### Predicting the classes with the LDA model
 
 ```{r}
+# Using the LDA model to predict the classes.
 lda.pred <- predict(lda.fit, newdata = test)
 
 table(correct = correct_classes, predicted = lda.pred$class)
@@ -151,6 +151,30 @@ summary(dist_man)
 km <- kmeans(Boston, centers = 4)
 pairs(Boston[1:6], col = km$cluster)
 
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# MASS, ggplot2 and Boston dataset are available
+set.seed(123)
 
+# determine the number of clusters
+k_max <- 10
+
+# calculate the total within sum of squares
+twcss <- sapply(1:k_max, function(k){kmeans(Boston, k)$tot.withinss})
+
+# visualize the results
+qplot(x = 1:k_max, y = twcss, geom = 'line')
+
+# k-means clustering
+km <- kmeans(Boston, centers = 2)
+
+# plot the Boston dataset with clusters
+pairs(Boston[1:6], col = km$cluster)
 
 ```
+  
+Limiting the number of clusters to two, the plot becomes much more readable than before. With two clusters, the values are not as cluttered than before (whith some singular exceptions).
+
+
+
+
+
