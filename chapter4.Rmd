@@ -1,6 +1,6 @@
 # Chapter 4 - Data analysis of the Boston dataset and data wrangling of chapter 5 data  
 
-### Exploring the dataset  
+## Exploring the dataset  
 
 ```{r}
 # Loading packages.
@@ -22,7 +22,7 @@ The Boston dataset depicts housing values in suburbs of Boston.
 Dataset includes variables such as crime rates, taxation rates, accessibility to radial highways and median values of owner-occupied homes.  
 The variables consist of numerical values, and it has 506 rows and 14 columns.  
 
-### Graphical overview of the data  
+## Graphical overview of the data  
 
 ```{r}
 # Plot variable info.
@@ -44,7 +44,7 @@ corrplot(cor_matrix, method="circle")
 There are a bit too many variables for these kinds of plots, but overall we can see that only the **rm (average rooms per dwelling)** seems to follow a normal distribution.  
 From the correlation matrix we can see heavy positive and negative correlation between many of the variables in the dataset. The only variable with very low correlation to the other variables is the **chas (Charles River dummy variable)**.  Looking at the **medv (median value of owner-occupied homes in $1000s)** and its correlation, we can see that almost all of the variables have quite high positive or negative correlation, with the highest being the **lstat (lower status of the population (percent))**.  
 
-### Standardizing the dataset and looking at the results
+## Standardizing the dataset and looking at the results
 
 ```{r}
 # Checking data summary and standardizing the dataset.
@@ -55,7 +55,7 @@ summary(boston_scaled)
 
 Standardizing the dataset causes all variable mean values to be 0 and max and min values are closer than in the pre-standardized dataset. For example the **crim** variable had a value range of 0.00632 to 88.97620 and after the standardization it is -0.419367 to 9.924110.  
 
-### Creating the training set  
+## Creating the training set  
 
 ```{r}
 
@@ -96,7 +96,7 @@ test <- dplyr::select(test, -crime)
 ```
   
 
-### Fitting the linear discriminant analysis on the train set and drawing the plot  
+## Fitting the linear discriminant analysis on the train set and drawing the plot  
 
 ```{r}
 
@@ -122,7 +122,7 @@ lda.arrows(lda.fit, myscale = 1)
 print(lda.fit)
 ```
   
-### Predicting the classes with the LDA model
+## Predicting the classes with the LDA model
 
 ```{r}
 # Using the LDA model to predict the classes.
@@ -133,7 +133,7 @@ table(correct = correct_classes, predicted = lda.pred$class)
 
 Our model seems to work best when predicting high crime rates, but results quicly get worse as we move to the lower crimerates (especially the med_low rate).  
 
-### Euclidean distances, K-means and clustering   
+## Euclidean distances, K-means and clustering   
 
 ```{r}
 # Re-reading the data and standardizing it.
