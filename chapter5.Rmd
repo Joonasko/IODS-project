@@ -1,0 +1,61 @@
+# Chapter 5 - Dimensionality reduction techniques  
+## Exploring the dataset
+
+```{r}
+# Loading packages.
+library(dplyr)
+library(MASS)
+library(tidyr)
+library(corrplot)
+library(ggplot2)
+library(GGally)
+
+# Loading the dataset.
+human <- read.csv("data/human.csv")
+
+# Exploring structure and dimensions.
+str(human)
+dim(human)
+
+# Graphical overview of the data.
+pairs(human, pch = 20)
+
+summary(human)
+
+# Plot correlation between variables.
+p <- ggpairs(human, upper = list(continuous = wrap("cor",size=2)))
+p
+
+# Create the correlation matrix and plot it.
+cor_matrix <- round(cor(human),digits=5)
+cor_matrix
+corrplot(cor_matrix, method="circle")
+```
+  The dataset consists of 155 rows and 8 columns, being mostly numerical type (except GNI is integer type).  
+  Female to male education ratio has a high positive correlation with Edu.Exp and Life.Exp and a high negative correlation with GNI, Mat.Mor and Ado.Birth. Highly educated women are less likely to die from childbirth and have a higher overall life expectancy.  
+  Suprisingly, female to male labour force participation does not correlate heavily with any of the variables, neither do the GNI or Parli.F.
+  
+## Principal component analysis (PCA)
+
+```{r}
+# Performing PCA with raw human data
+pca_human <- prcomp(human)
+
+# Drawing a biplot of the principal component representation and the original variables.
+biplot(pca_human, choices = 1:2)
+
+```
+
+## PCA with standardized variables
+```{r}
+# Standardizing the data.
+human_std <- scale(human)
+
+# Performing the PCA
+pca_human_std <- prcomp(human_std)
+
+# Drawing the biplot
+biplot(pca_human, choices = 1:2)
+```
+
+The resulting plots seem to be identical.
