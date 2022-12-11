@@ -46,4 +46,10 @@ output:
 
 ***
 
-  more chapters will be added..
+```{r child = "chapter6.Rmd"}
+# This will include Chapter 6 (that is updated in its own file) in the document.
+```
+
+***
+
+  All done! :)
