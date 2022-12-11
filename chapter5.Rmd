@@ -58,4 +58,5 @@ pca_human_std <- prcomp(human_std)
 biplot(pca_human, choices = 1:2)
 ```
 
-The resulting plots seem to be identical.
+The resulting plots seem to be identical.  
+(Unfortunately due toa work trip and presentation planning I didn't have time to complete all of the exercises this week.)

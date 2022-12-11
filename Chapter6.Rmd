@@ -1,0 +1,220 @@
+# Chapter 6 - Analysis of longitudial data  
+# Part 1
+
+
+## Reading the files and checking their contents
+
+```{r}
+# Load required packages.
+library(dplyr)
+library(lme4)
+library(ggplot2)
+library(tidyr)
+
+# Reading data in.
+bprs_long <- read.csv("data/bprs_long.csv")
+rats_long <- read.csv("data/rats_long.csv")
+
+# Just for measure, changing the variables to factor format and sorting by week / Time.
+bprs_long$treatment <- factor(bprs_long$treatment)
+bprs_long$subject <- factor(bprs_long$subject)
+
+bprs_long <- arrange(bprs_long, week)
+
+rats_long$Group <- factor(rats_long$Group)
+rats_long$ID <- factor(rats_long$ID)
+
+rats_long <- arrange(rats_long, Time)
+```
+  
+## Working with the RATS dataset
+
+```{r}
+# Check colnames, dimensions and structure
+colnames(rats_long)
+dim(rats_long)
+str(rats_long)
+```
+The rats dataset (long format) contains The variables ID, Group, Time and weight.  
+It has 176 rows and 4 columns.  
+ID and Group variables are factor types, Time and weight integers.
+
+## Plotting the data
+
+```{r}
+# Drawing the plot.
+
+ggplot(rats_long, aes(x = Time, y = weight, group = ID)) +
+  geom_line(aes(linetype = Group, colour = Group)) +
+  scale_y_continuous(limits = c(min(rats_long$weight), max(rats_long$weight)))
+
+glimpse(rats_long)
+# Standardise the variable weight.
+rats_std <- rats_long %>%
+  group_by(Time) %>%
+    mutate(stdweight = (weight - mean(weight))/sd(weight)) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(rats_std)
+
+# Plot again with the standardised bprs
+
+ggplot(rats_std, aes(x = Time, y = stdweight, group = ID)) +
+  geom_line(aes(linetype = Group, colour = Group)) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(rats_std$stdweight), max(rats_std$stdweight)))
+```
+We can see that the rats in groups 2 and 3 gain more weight as time passes, and have more weight in the beginning than group 1 rats. However, and even more clearly after the standardization, we can see that the group 1 rats do not gain as much weight as the other two.
+  
+## Summary graphs
+```{r}
+# Work with the exercise in this chunk, step-by-step. Fix the R code!
+# BPRSL is available
+
+# Number of subjects (per group):
+
+sum(rats_std$Group == 1)
+sum(rats_std$Group == 2)
+sum(rats_std$Group == 3)
+
+n = 44
+
+# Summary data with mean and standard error of bprs by treatment and week
+rats_std <- rats_std %>%
+  group_by(Group, Time) %>%
+  summarise( mean = mean(weight), se =  sd(weight)/sqrt(n)) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(rats_std)
+
+# Plot the mean profiles
+library(ggplot2)
+ggplot(rats_std, aes(x = Time, y = mean, col = Group)) +
+  geom_line() +
+  #geom_errorbar(aes(ymin=mean-se, ymax=mean+se, linetype="1"), width=0.3) +
+  scale_y_continuous(name = "mean(bprs) +/- se(bprs)")
+
+```
+From the mean profile plots, we can see that the rats do gain weight over time. The rate is faster for groups 2 and 3 as previously observed. There is also an interesting dip in weights for the groups 2 and 3 at around 37-42 days which is not true for group 1.  
+
+## Finding the outliers
+
+```{r}
+# Creating a summary data with grouping Group and ID with weight mean as summary variable.
+rats_summary <- rats_long %>%
+  filter(Time > 1) %>%
+  group_by(Group, ID) %>%
+  summarise( mean=mean(weight)) %>%
+  ungroup()
+
+# Checking the data with glimpse.
+glimpse(rats_summary)
+
+# Drawing the boxplot of mean values between groups.
+ggplot(rats_summary, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(weight), Time (days) 1-64")
+
+# Create a new data by filtering the outlier and adjust the ggplot code the draw the plot again with the new data
+
+# Splitting the data by rat groups, removing the outliers for each group and combining them with rbind.
+rats1 <- rats_summary[rats_summary$Group == 1,]
+rats2 <- rats_summary[rats_summary$Group == 2,]
+rats3 <- rats_summary[rats_summary$Group == 3,]
+
+g1_Q1 <- quantile(rats1$mean, .25)
+g1_Q3 <- quantile(rats1$mean, .75)
+g1_IQR <- IQR(rats1$mean)
+
+g2_Q1 <- quantile(rats2$mean, .25)
+g2_Q3 <- quantile(rats2$mean, .75)
+g2_IQR <- IQR(rats2$mean)
+
+g3_Q1 <- quantile(rats3$mean, .25)
+g3_Q3 <- quantile(rats3$mean, .75)
+g3_IQR <- IQR(rats3$mean)
+
+rats1 <- subset(rats1, rats1$mean > (g1_Q1 - 1.5*g1_IQR) & rats1$mean < (g1_Q3 + 1.5*g1_IQR))
+rats2 <- subset(rats2, rats2$mean > (g2_Q1 - 1.5*g2_IQR) & rats2$mean < (g2_Q3 + 1.5*g2_IQR))
+rats3 <- subset(rats3, rats3$mean > (g3_Q1 - 1.5*g3_IQR) & rats3$mean < (g3_Q3 + 1.5*g3_IQR))
+
+glimpse(rats1)
+glimpse(rats2)
+glimpse(rats3)
+
+rats_summary_out <- data.frame()
+rats_summary_out <- rbind(rats_summary_out, rats1)
+rats_summary_out <- rbind(rats_summary_out, rats2)
+rats_summary_out <- rbind(rats_summary_out, rats3)
+glimpse(rats_summary_out)
+
+ggplot(rats_summary_out, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(weight), Time (days) 1-64")
+
+# Removing only the one outlier with the filter function.
+rats_summary_out <- rats_summary %>% filter(mean <550)
+
+ggplot(rats_summary_out, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(weight), Time (days) 1-64")
+```
+  
+As we previously saw from the data, group 1 has the lowest weight from the three groups and group 3 the highest. The weight difference between group 1 and 2-3 is quite large, so if lower weight was the goal, group 1 outperformed the rest with a large margin.
+
+## Anova test
+
+```{r}
+# Creating the baseline from original data.
+rats_base <- rats_long[rats_long$Time == 1,]
+
+# Add the baseline from the original data as a new variable to the summary data
+rats_summary_out <- rats_summary %>%
+  mutate(baseline = rats_base$weight)
+rats_summary_out
+
+# Fit the linear model with the mean as the response
+fit <- lm(mean ~ baseline, data = rats_summary_out)
+
+# Compute the analysis of variance table for the fitted model with anova()
+anova(fit)
+```
+  
+According to the low P-value (1.57e-14), we can say that there is a difference in weight gain/loss between the three groups. So we made the correct first predictions with  the original plots. 
+
+# Part 2  
+
+## Linear mixed effects model  
+
+```{r}
+dim(bprs_long)
+str(bprs_long)
+glimpse(bprs_long)
+
+ggplot(bprs_long, aes(x = week, y = bprs, col = subject)) +
+  geom_line() +
+  facet_grid(cols = vars(treatment), 
+             labeller = label_both) +
+  labs(title = "Effects of treatments 1 and 2 on bprs") +
+  theme(legend.position = "top")
+```
+At a first glance, it is quite difficult to say which treatment has better results.  
+
+## Multiple linear regression model
+
+```{r}
+bprs_reg <- lm(bprs ~ week + treatment, data = bprs_long)
+summary(bprs_reg)
+```
+  
+## Random intercept model
+
+```{r}
+bprs_rim <- lmer(bprs ~ week + treatment + (1 | subject), data = bprs_long, REML = FALSE)
+summary(bprs_rim)
+```
