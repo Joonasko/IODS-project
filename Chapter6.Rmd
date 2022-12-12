@@ -35,7 +35,8 @@ colnames(rats_long)
 dim(rats_long)
 str(rats_long)
 ```
-  The rats dataset (long format) contains The variables ID, Group, Time and weight.  
+
+The rats dataset (long format) contains The variables ID, Group, Time and weight.  
 It has 176 rows and 4 columns.  
 ID and Group variables are factor types, Time and weight integers.
 
@@ -65,7 +66,8 @@ ggplot(rats_std, aes(x = Time, y = stdweight, group = ID)) +
   theme(legend.position = "none") + 
   scale_y_continuous(limits = c(min(rats_std$stdweight), max(rats_std$stdweight)))
 ```
-  We can see that the rats in groups 2 and 3 gain more weight as time passes, and have more weight in the beginning than group 1 rats. However, and even more clearly after the standardization, we can see that the group 1 rats do not gain as much weight as the other two.
+
+We can see that the rats in groups 2 and 3 gain more weight as time passes, and have more weight in the beginning than group 1 rats. However, and even more clearly after the standardization, we can see that the group 1 rats do not gain as much weight as the other two.
   
 ## Summary graphs
 ```{r}
@@ -97,7 +99,8 @@ ggplot(rats_std, aes(x = Time, y = mean, col = Group)) +
   scale_y_continuous(name = "mean(bprs) +/- se(bprs)")
 
 ```
-  From the mean profile plots, we can see that the rats do gain weight over time. The rate is faster for groups 2 and 3 as previously observed. There is also an interesting dip in weights for the groups 2 and 3 at around 37-42 days which is not true for group 1.  
+
+From the mean profile plots, we can see that the rats do gain weight over time. The rate is faster for groups 2 and 3 as previously observed. There is also an interesting dip in weights for the groups 2 and 3 at around 37-42 days which is not true for group 1.  
 
 ## Finding the outliers
 
@@ -203,7 +206,8 @@ ggplot(bprs_long, aes(x = week, y = bprs, col = subject)) +
   labs(title = "Effects of treatments 1 and 2 on bprs") +
   theme(legend.position = "top")
 ```
-  At a first glance, it is quite difficult to say which treatment has better results.  
+
+At a first glance, it is quite difficult to say which treatment has better results.  
 
 ## Multiple linear regression model
 
