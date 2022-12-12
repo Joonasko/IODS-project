@@ -215,6 +215,59 @@ summary(bprs_reg)
 ## Random intercept model
 
 ```{r}
-bprs_rim <- lmer(bprs ~ week + treatment + (1 | subject), data = bprs_long, REML = FALSE)
-summary(bprs_rim)
+bprs_ref <- lmer(bprs ~ week + treatment + (1 | subject), data = bprs_long, REML = FALSE)
+summary(bprs_ref)
 ```
+
+## Random Intercept and Random Slope Model
+
+```{r}
+# Create a random intercept and random slope model.
+bprs_ref1 <- lmer(bprs ~ week + treatment + (week | subject), data = bprs_long, REML = FALSE)
+
+# Print a summary of the model.
+summary(bprs_ref1)
+
+# Perform an ANOVA test on the two models.
+anova(bprs_ref1, bprs_ref)
+```
+
+## Random Intercept and Random Slope Model with interaction
+
+```{r}
+# create a random intercept and random slope model with the interaction
+bprs_ref2 <- lmer(bprs ~ week * treatment + (week | subject), data = bprs_long, REML = FALSE)
+
+# print a summary of the model
+summary(bprs_ref2)
+
+# perform an ANOVA test on the two models
+anova(bprs_ref2, bprs_ref1)
+
+# draw the plot of RATSL with the observed Weight values
+ggplot(bprs_long, aes(x = week, y = bprs, colour = subject)) +
+  facet_grid(cols = vars(treatment), 
+             labeller = label_both) +
+  geom_line() +
+  scale_x_continuous(name = "Time (weeks)") +
+  scale_y_continuous(name = "bprs score") +
+  theme(legend.position = "top")
+
+# Create a vector of the fitted values
+bprs_fitted <- fitted(bprs_ref2)
+
+
+# Create a new column fitted to RATSL
+bprs_long <- mutate(bprs_long, fitted = bprs_fitted)
+
+# draw the plot of RATSL with the Fitted values of weight
+ggplot(bprs_long, aes(x = week, y = bprs_fitted, colour = subject)) +
+  facet_grid(cols = vars(treatment), 
+           labeller = label_both) +
+  geom_line() +
+  scale_x_continuous(name = "Time (weeks)") +
+  scale_y_continuous(name = "Fitted bprs score") +
+  theme(legend.position = "top")
+```
+  
+It is really difficult to say which treatment had better results. If I had to make a quess, I would say that treatment 1 had a slightly better performance since most of the subjects seem to have a lower score in the end than the ones in treatment group 2.
